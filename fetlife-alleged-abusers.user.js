@@ -373,39 +373,17 @@ FAADE.main = function () {
     }
 
     // For each user ID found,
-    var last_id = null;
     for (i = 0; i < user_links.length; i++) {
         // Collect its user ID number.
         var id = user_links[i].href.match(/\d+\/?$/);
         if (id) { id = id.toString(); } // cast to string for later comparison
-
-        // Get nickname.
-        var n;
-        if (user_links[i].children.length) {
-            // This is an avatar link, not a text link.
-            n = user_links[i].childNodes[0].alt;
-        } else {
-            // This is a text link. Easy.
-            n = user_links[i].innerHTML;
-        }
 
         // check the alleged abusers data store for a match.
         if (-1 !== abuser_ids.indexOf(id)) {
             FAADE.log('found match on this page for alleged abuser ID number ' + id);
             // highlight the user's links that matched an alleged abuser using CSS
             user_links[i].setAttribute('class', user_links[i].className + ' faade_alleged_abuser');
-
         }
-
-        // Don't create another link if we just made one for that user.
-        if (id === last_id) { continue; }
-
-        // Offer a link to add another report for this user.
-        // See also: https://support.google.com/docs/bin/answer.py?hl=en&answer=160000
-        // Add link to report this user for a consent violation.
-        var a = FAADE.createAbuseReportLink(id, n);
-        user_links[i].parentNode.appendChild(a);
-        last_id = id;
     }
 };
 
